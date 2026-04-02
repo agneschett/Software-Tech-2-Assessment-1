@@ -1,5 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox
+import time
+import random
+import string
 
 # ===== RED-BLACK TREE =====
 class RBNode:
@@ -218,6 +221,7 @@ class RBTVisualizer:
         tk.Button(frame, text="Insert", command=self.insert).grid(row=2, column=0, pady=5)
         tk.Button(frame, text="Delete", command=self.delete).grid(row=2, column=1)
         tk.Button(frame, text="Search", command=self.search).grid(row=2, column=2)
+        tk.Button(frame, text="Run Benchmark", command=self.benchmark).grid(row=3, column=0, columnspan=3, pady=5)
 
         # Output
         self.output = tk.Text(master, height=5, width=60)
@@ -273,6 +277,41 @@ class RBTVisualizer:
         self.canvas.create_oval(x - radius, y - radius, x + radius, y + radius, fill=color)
         self.canvas.create_text(x, y, text=node.name[:5], fill="white" if color=="black" else "black")
 
+    def benchmark(self, N=1000):
+        self.rbt = RedBlackTree()  # reset tree
+
+        # Generate random names and phones
+        names = [''.join(random.choices(string.ascii_lowercase, k=7)) for _ in range(N)]
+        phones = [''.join(random.choices(string.digits, k=10)) for _ in range(N)]
+
+        # --- Benchmark Insert ---
+        start = time.time()
+        for i in range(N):
+            self.rbt.insert(names[i], phones[i])
+        insert_time = time.time() - start
+
+        # --- Benchmark Search ---
+        start = time.time()
+        for name in names:
+            self.rbt.search(self.rbt.root, name)
+        search_time = time.time() - start
+
+        # --- Benchmark Delete ---
+        start = time.time()
+        for name in names[:100]:  # delete first 100 for example
+            self.rbt.delete(name)
+        delete_time = time.time() - start
+
+        # --- Display Results ---
+        self.output.delete(1.0, tk.END)
+        self.output.insert(tk.END,
+            f"RBT Benchmark Results (N={N}):\n"
+            f"Insertion: {insert_time:.4f} s\n"
+            f"Search:    {search_time:.4f} s\n"
+            f"Delete:    {delete_time:.4f} s\n"
+        )
+
+        self.draw_tree()  # redraw tree after benchmark
 
 # ===== RUN =====
 if __name__ == "__main__":
