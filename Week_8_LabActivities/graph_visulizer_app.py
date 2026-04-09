@@ -5,7 +5,6 @@ import threading
 from collections import defaultdict
 
 
-# ===== GRAPH CLASS =====
 class Graph:
     def __init__(self, directed=False, weighted=False):
         self.graph = defaultdict(list)
@@ -29,7 +28,7 @@ class Graph:
                     self.weights[(v2, v1)] = weight
 
 
-# ===== GRAPH VISUALIZER =====
+
 class GraphVisualizer(tk.Tk):
     def __init__(self, graph):
         super().__init__()
@@ -73,7 +72,7 @@ class GraphVisualizer(tk.Tk):
 
         self.draw_graph()
 
-    # ===== DRAW GRAPH =====
+
     def draw_graph(self):
         self.canvas.delete("all")
         self.vertex_positions.clear()
@@ -130,7 +129,7 @@ class GraphVisualizer(tk.Tk):
 
                 self.edge_lines[(v, nbr)] = line
 
-    # ===== RESET =====
+ 
     def reset_colors(self):
         for circle in self.vertex_circles.values():
             self.canvas.itemconfig(circle, fill='lightblue')
